@@ -10,6 +10,8 @@
 #import "AFNetworking.h"
 #import "CYMainTabViewController.h"
 #import "NewFeatureViewController.h"
+#import "WeiboAccount.h"
+#import "WeiboAccountTool.h"
 
 @interface WeiboOAuthViewController () <UIWebViewDelegate>
 
@@ -59,8 +61,9 @@
         unsigned long fromIndex = range.location + range.length;
         NSString *code = [url substringFromIndex:fromIndex];
         [self accessTokenWithCode:code];
+        return NO;
     }
-    return NO;
+    return YES;
 }
 /**
  *  利用code （授权过的request token，换取access token）
@@ -98,12 +101,15 @@
     [mgr POST:@"https://api.weibo.com/oauth2/access_token" parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
         CYLog(@"请求成功-%@",responseObject);
         
-        //将返回的帐号字典数据,转成模型，再存进沙盒
-        NSString *doc =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString *path = [doc stringByAppendingPathComponent:@"account.plist"];
-        [responseObject writeToFile:path atomically:YES];
+        WeiboAccount *account = [WeiboAccount accountWithDict:responseObject];
+        
+        //存储帐号信息
+        [WeiboAccountTool storeAccount:account];
+        
         
         //切换窗口的根控制器
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window switchRootViewController];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         CYLog(@"请求失败-%@",error);

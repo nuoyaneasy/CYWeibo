@@ -7,9 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import "CYMainTabViewController.h"
-#import "NewFeatureViewController.h"
 #import "WeiboOAuthViewController.h"
+#import "WeiboAccount.h"
+#import "WeiboAccountTool.h"
+
 @interface AppDelegate ()
 
 @end
@@ -23,51 +24,21 @@
     self.window = [[UIWindow alloc] init];
     self.window.frame = [UIScreen mainScreen].bounds;
     
-    //2.设置根控制器
     
-    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *path = [doc stringByAppendingPathComponent:@"account.plist"];
-    NSDictionary *account = [NSDictionary dictionaryWithContentsOfFile:path];
+    
+    
+
+    //2.设置根控制器
+    WeiboAccount *account = [WeiboAccountTool account];
     if (account) { //如果存在，说明之前已经登录成功过
-            NSString *key = @"CFBundleVersion";
-            //判断版本号，根据版本号决定是否显示新特性
-        
-            //存储在沙盒中的版本号（上一次的使用版本）
-            NSString *lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-        
-        
-            //当前软件版本号（从info.plist获取）
-            NSString *currentVersion =  [NSBundle mainBundle].infoDictionary[key];
-            CYLog(@"%@",currentVersion);
-        
-            if ([currentVersion isEqualToString:lastVersion]) { //版本号相同:这次和上次一样
-                self.window.rootViewController = [[CYMainTabViewController alloc] init];
-            } else {
-                self.window.rootViewController = [[NewFeatureViewController alloc] init];
-        
-                //将版本号存进沙盒
-                [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:key];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
+        [self.window switchRootViewController];
     } else {
         self.window.rootViewController = [[WeiboOAuthViewController alloc] init];
     }
-
-
-    
-    
-    //3.设置子控制器
-
-    
-    //很多重复代码  -----》将重复代码抽取到一个方法中
-    //1、相同的代码放到一个方法中
-    //2、不同的东西变成参数
-    //3、在使用到这段代码的地方调用方法，传递参数
-    
-    
-    
-    //4.显示窗口
+    //3. 设置主窗口
     [self.window makeKeyAndVisible];
+    
+
     
     
     
