@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 @interface WeiboAccount : NSObject <NSCoding>
 
 @property (nonatomic, copy) NSString *access_token;
@@ -16,7 +15,12 @@
 
 @property (nonatomic, copy) NSNumber *expires_in;
 
+//date of token created
 @property (nonatomic, strong) NSDate *created_time;
+
+
+//user's nick name
+@property (nonatomic, copy) NSString *name;
 
 + (instancetype)accountWithDict:(NSDictionary *)dict;
 

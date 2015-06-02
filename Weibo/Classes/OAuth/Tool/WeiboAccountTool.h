@@ -12,7 +12,7 @@
  */
 
 #import <Foundation/Foundation.h>
-@class WeiboAccount;
+#import "WeiboAccount.h"
 @interface WeiboAccountTool : NSObject
 /**
  *  存储帐号信息

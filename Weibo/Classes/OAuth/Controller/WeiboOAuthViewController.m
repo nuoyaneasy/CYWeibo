@@ -10,7 +10,6 @@
 #import "AFNetworking.h"
 #import "CYMainTabViewController.h"
 #import "NewFeatureViewController.h"
-#import "WeiboAccount.h"
 #import "WeiboAccountTool.h"
 
 @interface WeiboOAuthViewController () <UIWebViewDelegate>

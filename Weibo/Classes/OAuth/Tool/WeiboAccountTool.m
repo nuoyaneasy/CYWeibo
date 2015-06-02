@@ -10,17 +10,11 @@
 #define WeiboAccountPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"account.archive"]
 
 #import "WeiboAccountTool.h"
-#import "WeiboAccount.h"
 
 @implementation WeiboAccountTool
 
 + (void)storeAccount:(WeiboAccount *)account
 {
-    
-    //获得帐号存储的时间 （accessToken）
-    
-    account.created_time = [NSDate date];
-
     
     //将返回的帐号字典数据,转成模型
     [NSKeyedArchiver archiveRootObject:account toFile:WeiboAccountPath];
