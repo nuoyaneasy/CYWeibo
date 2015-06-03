@@ -7,8 +7,15 @@
 //
 
 #import "WeiboStatus.h"
-#import "WeiboUser.h"
+#import "MJExtension.h"
+#import "WeiboPhoto.h"
+
 @implementation WeiboStatus
+
++ (NSDictionary *)objectClassInArray
+{
+    return @{@"pic_urls": [WeiboPhoto class]};
+}
 
 
 @end

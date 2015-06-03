@@ -24,6 +24,10 @@
 //正文字体
 #define WeiboStatusCellContentFont [UIFont systemFontOfSize:14]
 
+//被转发正文字体
+#define WeiboStatusCellRetweetedContentFont [UIFont systemFontOfSize:13]
+
+
 @class WeiboStatus;
 @interface WeiboStatusFrame : NSObject
 
@@ -64,8 +68,29 @@
 @property (nonatomic, assign) CGRect contentLabelF;
 
 /**
+ *  转发微博整体
+ */
+@property (nonatomic, assign) CGRect retweetlViewF;
+
+/**
+ *  转发微博正文 + 昵称
+ */
+@property (nonatomic, assign) CGRect retweetContentLabelF;
+/**
+ *  转发微博配图
+ */
+@property (nonatomic, assign) CGRect retweetPhotoViewF;
+
+/**
  *  cell高度
  */
 @property (nonatomic, assign) CGFloat cellHeight;
+
+/**
+ *  底部工具条
+ */
+@property (nonatomic, assign) CGRect toolBarF;
+
+
 
 @end

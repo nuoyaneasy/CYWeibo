@@ -220,7 +220,7 @@
     WeiboAccount *account = [WeiboAccountTool account];
     
     params[@"access_token"] = account.access_token;
-    params[@"count"] = @10;
+    params[@"count"] = @1;
     //since_id pull latest status from this since_id
     WeiboStatusFrame *firstStatusF = [self.statusesFrames firstObject];
     if (firstStatusF) {
@@ -458,9 +458,4 @@
     WeiboStatusFrame *frame = self.statusesFrames[indexPath.row];
     return frame.cellHeight;
 }
-
-
-
-
-
 @end

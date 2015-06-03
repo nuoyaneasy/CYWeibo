@@ -29,7 +29,6 @@
         //setup button
         [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-        self.backgroundColor = [UIColor redColor];
         [self setImage:[UIImage imageNamed:@"navigationbar_arrow_down"]forState:UIControlStateNormal];
         [self setImage:[UIImage imageNamed:@"navigationbar_arrow_up"] forState:UIControlStateSelected];
 

@@ -63,7 +63,6 @@
     
     //4.添加pageControll
     UIPageControl *pageControl = [[UIPageControl alloc] init];
-    //pageControl.size = CGSizeMake(100, 50); 不再设置这个父控件，indicator就不会响应点击事件
     pageControl.centerX = scrollW * 0.5;
     pageControl.centerY = scrollH - 50;
     pageControl.numberOfPages = NewFeatureCount;
