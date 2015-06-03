@@ -27,6 +27,9 @@
 //被转发正文字体
 #define WeiboStatusCellRetweetedContentFont [UIFont systemFontOfSize:13]
 
+// cell之间的间距
+#define WeiboStatusCellMargin 15
+
 
 @class WeiboStatus;
 @interface WeiboStatusFrame : NSObject

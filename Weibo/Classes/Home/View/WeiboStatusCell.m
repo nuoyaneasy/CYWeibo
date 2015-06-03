@@ -167,7 +167,7 @@
          */
         if (retweetedStatus.pic_urls.count) {
             self.retweetPhotoView.frame = statusFrame.retweetPhotoViewF;
-            WeiboPhoto *photo = [retweetedStatus.pic_urls lastObject];
+            WeiboPhoto *photo = [retweetedStatus.pic_urls firstObject];
             [self.retweetPhotoView sd_setImageWithURL:[NSURL URLWithString:photo.thunmbnail_pic] placeholderImage:[UIImage imageNamed:@"timeline_image_placeholder"]];
             self.retweetPhotoView.hidden = NO;
         } else {

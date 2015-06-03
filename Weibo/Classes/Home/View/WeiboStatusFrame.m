@@ -87,7 +87,7 @@
      */
     CGFloat contentX = iconX;
     CGFloat contentY = MAX(CGRectGetMaxY(self.iconViewF), CGRectGetMaxY(self.timeLabelF)) + WeiboStatusCellBorderW;
-    CGFloat maxW = cellW - 2 * iconX;
+    CGFloat maxW = cellW - 2 * contentX;
     CGSize contentSize = [self sizeWithText:status.text font:WeiboStatusCellContentFont maxW:maxW];
     self.contentLabelF = (CGRect){{contentX, contentY}, contentSize};
     
@@ -97,7 +97,7 @@
     CGFloat originalH = 0;
     if (status.pic_urls.count ) { //有配图
         CGFloat photoWH = 100;
-        CGFloat photoX = iconX;
+        CGFloat photoX = contentX;
         CGFloat photoY = CGRectGetMaxY(self.contentLabelF) + WeiboStatusCellBorderW;
         self.photoViewF = CGRectMake(photoX, photoY, photoWH, photoWH);
         
@@ -109,7 +109,7 @@
      *  原创微博整体
      */
     CGFloat originalX = 0;
-    CGFloat originalY = 0;
+    CGFloat originalY = WeiboStatusCellMargin;
     CGFloat originalW = cellW;
     self.originalViewF = CGRectMake(originalX, originalY, originalW, originalH);
     
@@ -123,7 +123,7 @@
      */
         CGFloat retweetContentX = WeiboStatusCellBorderW;
         CGFloat retweetContentY = WeiboStatusCellBorderW;
-        NSString *retweetContent = [NSString stringWithFormat:@"%@ : %@", retweetedUser.name, retweetedStatus.text];
+        NSString *retweetContent = [NSString stringWithFormat:@"@%@ : %@", retweetedUser.name, retweetedStatus.text];
         CGSize retweetedContentSize = [self sizeWithText:retweetContent font:WeiboStatusCellRetweetedContentFont maxW:maxW];
         self.retweetContentLabelF = (CGRect){{retweetContentX, retweetContentY}, retweetedContentSize};
         /**
@@ -157,7 +157,7 @@
     CGFloat toolBarX = 0;
     CGFloat toolBarH = 35;
     CGFloat toolBarW = cellW;
-    CGRectMake(toolBarX, toolBarY, toolBarW, toolBarH);
+    self.toolBarF = CGRectMake(toolBarX, toolBarY, toolBarW, toolBarH);
     /**
      *  cell高度
      */
