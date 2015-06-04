@@ -31,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.backgroundColor = CYColor(211, 211, 211);
+    
     //设置导航内容
     [self setupNav];
     

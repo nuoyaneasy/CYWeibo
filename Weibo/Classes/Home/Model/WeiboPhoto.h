@@ -10,6 +10,6 @@
 
 @interface WeiboPhoto : NSObject
 /**  缩略图地址 */
-@property (nonatomic, copy) NSString *thunmbnail_pic;
+@property (nonatomic, copy) NSString *thumbnail_pic;
 
 @end
