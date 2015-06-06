@@ -20,19 +20,21 @@
 
 @interface DropdownMenu : UIView
 
++(instancetype)menu;
+
+
 //委托
 @property (nonatomic, weak) id<DropdownMenuDelegate> delegate;
 
 //内容
-@property (nonatomic, weak) UIView *content;
+@property (nonatomic, strong) UIView *content;
 
 //内容控制器
 @property (nonatomic, strong) UIViewController *contentController;
 
-+(instancetype)menu;
 
 //显示
-- (void)showFrom:(UIView *)view;
+- (void)showFrom:(UIView *)from;
 
 
 //销毁

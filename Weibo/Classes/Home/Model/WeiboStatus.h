@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @class WeiboUser;
 
 @interface WeiboStatus : NSObject
@@ -42,5 +43,6 @@
 
 /** 表态数 */
 @property (nonatomic, assign) int attitudes_count;
+
 
 @end

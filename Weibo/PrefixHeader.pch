@@ -18,6 +18,8 @@
 #import "UIView+Extension.h"
 #import "UIWindow+Extension.h"
 #import "UIBarButtonItem+Extension.h"
+#import "NSDate+Extension.h"
+#import "NSString+Extension.h"
 #endif
 #ifdef DEBUG //处于开发阶段
 #define CYLog(...) NSLog(__VA_ARGS__)

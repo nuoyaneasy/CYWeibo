@@ -14,7 +14,7 @@
 *将来用来显示具体内容的容器
 */
 
-@property (nonatomic, strong) UIImageView *containerView;
+@property (nonatomic, weak) UIImageView *containerView;
 
 @end
 
@@ -40,14 +40,6 @@
         
         //清楚颜色
         self.backgroundColor = [UIColor clearColor];
-        
-//        //添加灰色图片
-//        UIImageView *dropdownMenu = [[UIImageView alloc] init];
-//        dropdownMenu.image = [UIImage imageNamed:@"popover_background"];
-//        dropdownMenu.width = 217;
-//        dropdownMenu.height= 217;
-//        dropdownMenu.userInteractionEnabled = YES;
-//        [self addSubview:dropdownMenu];
     }
     return self;
 }

@@ -9,25 +9,16 @@
 #import "WeiboStatusFrame.h"
 #import "WeiboStatus.h"
 #import "WeiboUser.h"
+#import "WeiboStatusPhotosView.h"
+
 
 //cell的margin宽度
 #define WeiboStatusCellBorderW 10
 
 
+
 @implementation WeiboStatusFrame
 
-- (CGSize)sizeWithText:(NSString *)text font:(UIFont *)font
-{
-    return [self sizeWithText:text font:font maxW:MAXFLOAT];
-}
-
-- (CGSize)sizeWithText:(NSString *)text font:(UIFont *)font maxW:(CGFloat)maxW
-{
-    NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-    attrs[NSFontAttributeName] = font;
-    CGSize maxSize = CGSizeMake(maxW, MAXFLOAT);
-    return [text boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:attrs context:nil].size;
-}
 
 - (void)setStatus:(WeiboStatus *)status
 {
@@ -49,7 +40,7 @@
     /** 昵称 */
     CGFloat nameX = CGRectGetMaxX(self.iconViewF) + WeiboStatusCellBorderW;
     CGFloat nameY = iconY;
-    CGSize nameSize = [self sizeWithText:user.name font:WeiboStatusCellNameFont];
+    CGSize nameSize = [user.name sizeWithFont:WeiboStatusCellNameFont];
     self.nameLabelF = (CGRect){{nameX, nameY}, nameSize};
     
     /** 会员图标 */
@@ -64,31 +55,32 @@
     /** 时间 */
     CGFloat timeX = nameX;
     CGFloat timeY = CGRectGetMaxY(self.nameLabelF) + WeiboStatusCellBorderW;
-    CGSize timeSize = [self sizeWithText:status.created_at font:WeiboStatusCellTimeFont];
+    CGSize timeSize = [status.created_at  sizeWithFont:WeiboStatusCellTimeFont];
     self.timeLabelF = (CGRect){{timeX, timeY}, timeSize};
     
     /** 来源 */
     CGFloat sourceX = CGRectGetMaxX(self.timeLabelF) + WeiboStatusCellBorderW;
     CGFloat sourceY = timeY;
-    CGSize sourceSize = [self sizeWithText:status.source font:WeiboStatusCellSourceFont];
+    CGSize sourceSize = [status.source sizeWithFont:WeiboStatusCellSourceFont];
     self.sourceLabelF = (CGRect){{sourceX, sourceY}, sourceSize};
     
     /** 正文 */
     CGFloat contentX = iconX;
     CGFloat contentY = MAX(CGRectGetMaxY(self.iconViewF), CGRectGetMaxY(self.timeLabelF)) + WeiboStatusCellBorderW;
     CGFloat maxW = cellW - 2 * contentX;
-    CGSize contentSize = [self sizeWithText:status.text font:WeiboStatusCellContentFont maxW:maxW];
+    CGSize contentSize = [status.text sizeWithFont:WeiboStatusCellContentFont maxW:maxW];
     self.contentLabelF = (CGRect){{contentX, contentY}, contentSize};
     
     /** 配图 */
     CGFloat originalH = 0;
     if (status.pic_urls.count) { // 有配图
-        CGFloat photoWH = 100;
-        CGFloat photoX = contentX;
-        CGFloat photoY = CGRectGetMaxY(self.contentLabelF) + WeiboStatusCellBorderW;
-        self.photoViewF = CGRectMake(photoX, photoY, photoWH, photoWH);
+        //CGFloat photosWH = 300;
+        CGFloat photosX = contentX;
+        CGFloat photosY = CGRectGetMaxY(self.contentLabelF) + WeiboStatusCellBorderW;
+        CGSize photosSize = [WeiboStatusPhotosView sizeWithCount:status.pic_urls.count];
+        self.photosViewF = (CGRect){{photosX, photosY}, photosSize};
         
-        originalH = CGRectGetMaxY(self.photoViewF) + WeiboStatusCellBorderW;
+        originalH = CGRectGetMaxY(self.photosViewF) + WeiboStatusCellBorderW;
     } else { // 没配图
         originalH = CGRectGetMaxY(self.contentLabelF) + WeiboStatusCellBorderW;
     }
@@ -109,18 +101,19 @@
         CGFloat retweetContentX = WeiboStatusCellBorderW;
         CGFloat retweetContentY = WeiboStatusCellBorderW;
         NSString *retweetContent = [NSString stringWithFormat:@"@%@ : %@", retweeted_status_user.name, retweeted_status.text];
-        CGSize retweetContentSize = [self sizeWithText:retweetContent font:WeiboStatusCellRetweetedContentFont maxW:maxW];
+        CGSize retweetContentSize = [retweetContent sizeWithFont:WeiboStatusCellRetweetedContentFont maxW:maxW];
         self.retweetContentLabelF = (CGRect){{retweetContentX, retweetContentY}, retweetContentSize};
         
         /** 被转发微博配图 */
         CGFloat retweetH = 0;
         if (retweeted_status.pic_urls.count) { // 转发微博有配图
-            CGFloat retweetPhotoWH = 100;
-            CGFloat retweetPhotoX = retweetContentX;
-            CGFloat retweetPhotoY = CGRectGetMaxY(self.retweetContentLabelF) + WeiboStatusCellBorderW;
-            self.retweetPhotoViewF = CGRectMake(retweetPhotoX, retweetPhotoY, retweetPhotoWH, retweetPhotoWH);
+            CGFloat retweetPhotosX = retweetContentX;
+            CGFloat retweetPhotosY = CGRectGetMaxY(self.retweetContentLabelF) + WeiboStatusCellBorderW;
+            CGSize retweetPhotosSize = [WeiboStatusPhotosView sizeWithCount:retweeted_status.pic_urls.count];
+            CGRect retweetPhotosRect = ((CGRect){{retweetPhotosX, retweetPhotosY}, retweetPhotosSize});
+            self.retweetPhotosViewF = retweetPhotosRect;
             
-            retweetH = CGRectGetMaxY(self.retweetPhotoViewF) + WeiboStatusCellBorderW;
+            retweetH = CGRectGetMaxY(self.retweetPhotosViewF) + WeiboStatusCellBorderW;
         } else { // 转发微博没有配图
             retweetH = CGRectGetMaxY(self.retweetContentLabelF) + WeiboStatusCellBorderW;
         }

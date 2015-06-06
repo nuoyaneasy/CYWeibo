@@ -13,6 +13,8 @@
 #import "WeiboUser.h"
 #import "WeiboPhoto.h"
 #import "WeiboStatusToolbar.h"
+#import "WeiboStatusPhotosView.h"
+#import "WeiboAvatarView.h"
 @interface WeiboStatusCell ()
 
 /* 原创微博 */
@@ -23,7 +25,7 @@
 /**
  *  头像
  */
-@property (nonatomic, weak) UIImageView *iconView;
+@property (nonatomic, weak) WeiboAvatarView *iconView;
 /**
  *  会员标识
  */
@@ -31,7 +33,7 @@
 /**
  *  配图
  */
-@property (nonatomic, weak) UIImageView *photoView;
+@property (nonatomic, weak) WeiboStatusPhotosView *photosView;
 /**
  *  昵称
  */
@@ -62,7 +64,7 @@
 /**
  *  转发微博配图
  */
-@property (nonatomic, weak) UIImageView *retweetPhotoView;
+@property (nonatomic, weak) WeiboStatusPhotosView *retweetPhotosView;
 /**
  *  工具条
  */
@@ -126,7 +128,7 @@
     /**
      *  头像
      */
-    UIImageView *iconView = [[UIImageView alloc] init];
+    WeiboAvatarView *iconView = [[WeiboAvatarView alloc] init];
     [originalView addSubview:iconView];
     self.iconView = iconView;
     /**
@@ -139,9 +141,9 @@
     /**
      *  配图
      */
-    UIImageView *photoView = [[UIImageView alloc] init];
-    [originalView addSubview:photoView];
-    self.photoView = photoView;
+    WeiboStatusPhotosView *photosView = [[WeiboStatusPhotosView alloc] init];
+    [originalView addSubview:photosView];
+    self.photosView = photosView;
     /**
      *  昵称
      */
@@ -154,6 +156,7 @@
      */
     UILabel *timeLabel = [[UILabel alloc] init];
     timeLabel.font = WeiboStatusCellTimeFont;
+    timeLabel.textColor = [UIColor orangeColor];
     [originalView addSubview:timeLabel];
     self.timeLabel = timeLabel;
     
@@ -198,9 +201,9 @@
     /**
      *  转发微博配图
      */
-    UIImageView *retweetPhotoView = [[UIImageView alloc] init];
+    WeiboStatusPhotosView *retweetPhotoView = [[WeiboStatusPhotosView alloc] init];
     [retweetView addSubview:retweetPhotoView];
-    self.retweetPhotoView = retweetPhotoView;
+    self.retweetPhotosView = retweetPhotoView;
 }
 
 /**
@@ -226,7 +229,7 @@
     
     /** 头像 */
     self.iconView.frame = statusFrame.iconViewF;
-    [self.iconView sd_setImageWithURL:[NSURL URLWithString:user.profile_image_url] placeholderImage:[UIImage imageNamed:@"avatar_default_small"]];
+    self.iconView.user = user;
     
     /** 会员图标 */
     if (user.isVIP) {
@@ -244,13 +247,12 @@
     
     /** 配图 */
     if (status.pic_urls.count) {
-        self.photoView.frame = statusFrame.photoViewF;
-        WeiboPhoto *photo = [status.pic_urls firstObject];
-        [self.photoView sd_setImageWithURL:[NSURL URLWithString:photo.thumbnail_pic] placeholderImage:[UIImage imageNamed:@"timeline_image_placeholder"]];
-        
-        self.photoView.hidden = NO;
+        self.photosView.frame = statusFrame.photosViewF;
+        self.photosView.photos = status.pic_urls;
+#warning 设置图片
+        self.photosView.hidden = NO;
     } else {
-        self.photoView.hidden = YES;
+        self.photosView.hidden = YES;
     }
     
     /** 昵称 */
@@ -258,12 +260,25 @@
     self.nameLabel.frame = statusFrame.nameLabelF;
     
     /** 时间 */
-    self.timeLabel.text = status.created_at;
-    self.timeLabel.frame = statusFrame.timeLabelF;
+    //也可以每次都重新计算
+//    NSString *newTime = status.created_at;
+//    NSUInteger timeLength = self.timeLabel.text.length;
+//    if (timeLength && timeLength != newTime.length) { //假如新的时间的label长度和之前的不一样，因为可能长，可能短
+//        
+//    }
+    NSString *time = status.created_at;
+    CGFloat timeLabelX = statusFrame.nameLabelF.origin.x;
+    CGFloat timeLabelY = CGRectGetMaxY(statusFrame.nameLabelF) + WeiboStatusCellBorderW;
+    CGSize  timeLabelSize = [time sizeWithFont:WeiboStatusCellTimeFont];
+    self.timeLabel.text = time;
+    self.timeLabel.frame = (CGRect){{timeLabelX, timeLabelY}, timeLabelSize};
     
     /** 来源 */
+    CGFloat sourceLabelX = CGRectGetMaxX(self.timeLabel.frame) + WeiboStatusCellBorderW;
+    CGFloat sourceLabelY = timeLabelY;
+    CGSize sourceLabelSize = [status.source sizeWithFont:WeiboStatusCellSourceFont];
+    self.sourceLabel.frame = (CGRect){{sourceLabelX, sourceLabelY}, sourceLabelSize};
     self.sourceLabel.text = status.source;
-    self.sourceLabel.frame = statusFrame.sourceLabelF;
     
     /** 正文 */
     self.contentLabel.frame = statusFrame.contentLabelF;
@@ -286,13 +301,11 @@
         
         /** 被转发的微博配图 */
         if (retweeted_status.pic_urls.count) {
-            self.retweetPhotoView.frame = statusFrame.retweetPhotoViewF;
-            WeiboPhoto *retweetedPhoto = [retweeted_status.pic_urls firstObject];
-            [self.retweetPhotoView sd_setImageWithURL:[NSURL URLWithString:retweetedPhoto.thumbnail_pic] placeholderImage:[UIImage imageNamed:@"timeline_image_placeholder"]];
-            
-            self.retweetPhotoView.hidden = NO;
+            self.retweetPhotosView.frame = statusFrame.retweetPhotosViewF;
+            self.retweetPhotosView.photos = retweeted_status.pic_urls;
+            self.retweetPhotosView.hidden = NO;
         } else {
-            self.retweetPhotoView.hidden = YES;
+            self.retweetPhotosView.hidden = YES;
         }
     } else {
         self.retweetlView.hidden = YES;

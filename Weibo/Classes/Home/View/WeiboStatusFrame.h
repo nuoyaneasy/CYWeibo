@@ -30,6 +30,8 @@
 // cell之间的间距
 #define WeiboStatusCellMargin 15
 
+//cell的margin宽度
+#define WeiboStatusCellBorderW 10
 
 @class WeiboStatus;
 @interface WeiboStatusFrame : NSObject
@@ -52,7 +54,7 @@
 /**
  *  配图
  */
-@property (nonatomic, assign) CGRect photoViewF;
+@property (nonatomic, assign) CGRect photosViewF;
 /**
  *  昵称
  */
@@ -82,7 +84,7 @@
 /**
  *  转发微博配图
  */
-@property (nonatomic, assign) CGRect retweetPhotoViewF;
+@property (nonatomic, assign) CGRect retweetPhotosViewF;
 
 /**
  *  cell高度

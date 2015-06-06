@@ -8,6 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    WeiboUserVerifiedTypeNone = -1,  //没有任何认证
+    
+    WeiboUserVerifiedTypePersonal = 0, //个人
+    
+    WeiboUserVerifiedTypeOrgEnterprize = 2,
+    WeiboUserVerifiedTypeOrgMedia = 3,
+    WeiboUserVerifiedTypeOrgWebsite = 5,
+    
+    WeiboUserVerifiedTypeDaren = 220 //达人
+    
+}WeiboUserVerifiedType;
+
 @interface WeiboUser : NSObject
 
 /**idstr	string	字符串型的用户UID*/
@@ -26,5 +39,8 @@
 @property (nonatomic, assign) int mbrank;
 
 @property (nonatomic, assign, getter=isVIP) BOOL VIP;
+
+@property (nonatomic, assign) WeiboUserVerifiedType verified_type;
+
 
 @end
