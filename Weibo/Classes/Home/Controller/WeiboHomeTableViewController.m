@@ -132,7 +132,6 @@
     
     //3.发送请求
     [mgr GET:@"https://api.weibo.com/2/users/show.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        CYLog(@"AFN success----%@", responseObject);        
         //tilte button
         UIButton *titleButton = (UIButton *)self.navigationItem.titleView;
         
@@ -146,7 +145,6 @@
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        CYLog(@"AFN failed-----%@",error);
     }];
 }
 
@@ -230,7 +228,6 @@
     }
     //3.发送请求
     [mgr GET:@"https://api.weibo.com/2/statuses/friends_timeline.json" parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject) {
-        CYLog(@"AFN success----%@", responseObject);
 
         //convert dictionary to array
         NSArray *newStatuses = [WeiboStatus objectArrayWithKeyValuesArray:responseObject[@"statuses"]];

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface composeViewController : UIImageView
+@interface ComposeViewController : UIViewController
 
 @end

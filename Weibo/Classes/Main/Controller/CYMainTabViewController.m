@@ -13,6 +13,7 @@
 #import "WeiboProfileTableViewController.h"
 #import "WeiboNavigationViewController.h"
 #import "CYTabbar.h"
+#import "composeViewController.h"
 @interface CYMainTabViewController () <CYTabBarDelegate>
 
 @end
@@ -64,7 +65,6 @@
     childVC.tabBarItem.selectedImage = [[UIImage imageNamed:selectedImage] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [childVC.tabBarItem setTitleTextAttributes:textAttrs forState:UIControlStateNormal];
     [childVC.tabBarItem setTitleTextAttributes:selectedTextAttrs forState:UIControlStateSelected];
-
     
     //添加子控制器
     
@@ -77,8 +77,9 @@
 
 - (void)tabBarDidClickButton:(CYTabbar *)tabbar
 {
-    UIViewController *vc = [[UIViewController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
+    ComposeViewController *vc = [[ComposeViewController alloc] init];
+    WeiboNavigationViewController *nav = [[WeiboNavigationViewController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 /*
