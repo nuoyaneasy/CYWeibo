@@ -13,15 +13,28 @@
 #import "MBProgressHUD+MJ.h"
 #import "WeiboComposeToolbar.h"
 #import "WeiboComposePhotosView.h"
+#import "WeiboEmotionKeyboard.h"
+#import "WeiboEmotion.h"
 
 @interface ComposeViewController () <UITextViewDelegate, WeiboComposeToolbarDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, weak) MultilineTextView *textView;
 @property (nonatomic, weak) WeiboComposeToolbar *toolBar;
 @property (nonatomic, weak) WeiboComposePhotosView *photosView;
+@property (nonatomic, strong) WeiboEmotionKeyboard *emotionKeyboard;
 @end
 
 @implementation ComposeViewController
+#pragma mark - 懒加载 
+
+- (WeiboEmotionKeyboard *)emotionKeyboard
+{
+    if (!_emotionKeyboard) {
+        self.emotionKeyboard = [[WeiboEmotionKeyboard alloc] init];
+    }
+    return _emotionKeyboard;
+}
+
 #pragma mark - 系统方法
 
 - (void)viewDidLoad
@@ -35,6 +48,7 @@
     [self setupToolbar];
     
     [self setupPhotosView];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -86,7 +100,6 @@
 {
     MultilineTextView *textView = [[MultilineTextView alloc] init];
     textView.placeholder = @"分享你的新鲜事...";
-    textView.placeholderColor = [UIColor redColor];
     //垂直方向永远可以拖拽
     textView.alwaysBounceVertical = YES;
     textView.font = [UIFont systemFontOfSize:15];
@@ -96,6 +109,8 @@
     
     //监听通知
     [CYNotificationCenter addObserver:self selector:@selector(textDidChange) name:UITextViewTextDidChangeNotification object:textView];
+    
+    [CYNotificationCenter addObserver:self selector:@selector(emotionDidSelect:) name:WeiboEmotionDidSelectNotification object:nil];
     
     //键盘通知
     //键盘位置和尺寸发生改变，发出通知
@@ -235,6 +250,36 @@
     }];
 }
 
+- (void)emotionDidSelect:(NSNotification *)notification
+{
+    WeiboEmotion *emotion =  notification.userInfo[SelectEmotionKey];
+    
+    if (emotion.code) {
+        //insertText
+        [self.textView insertText:emotion.code];
+    } else if (emotion.png) {
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        //拼接之前的文字和图片
+        [attr appendAttributedString:self.textView.attributedText];
+        
+        //加载图片
+        NSTextAttachment *attach = [[NSTextAttachment alloc] init];
+        attach.image = [UIImage imageNamed:emotion.png];
+        CGFloat attchWH = self.textView.font.lineHeight;
+        attach.bounds = CGRectMake(0, 0, attchWH, attchWH);
+        NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attach];
+        
+        //拼接图片
+        [attr appendAttributedString:imageString];
+        
+        //设置字体
+        [attr addAttribute:NSFontAttributeName value:self.textView.font range:NSMakeRange(0, attr.length)];
+        
+        self.textView.attributedText =attr;
+        
+    }
+}
+
 #pragma mark - UITextViewDelegate
 
 
@@ -278,7 +323,7 @@
             break;
             
         case WeiboComposeToolbarTypeEmotion: // 表情\键盘
-            //HWLog(@"--- 表情");
+            [self switchKeyboard];
             break;
     }
 }
@@ -293,6 +338,29 @@
 - (void)openAlbum
 {
     [self openImagePickerController:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+- (void)switchKeyboard //切换键盘
+{
+    if (self.textView.inputView == nil) {
+        WeiboEmotionKeyboard *emotionKb = [[WeiboEmotionKeyboard alloc] init];
+        emotionKb.width = self.view.width;
+        emotionKb.height = 216;
+        self.textView.inputView = emotionKb;
+        
+        //显示键盘图标
+    } else { //切换为系统自带键盘
+        self.textView.inputView = nil;
+        //显示表情图标
+    }
+    //退出键盘
+    [self.view endEditing:YES];
+    //[self.view.window endEditing:YES];
+    //弹出键盘
+    //[self.textView becomeFirstResponder];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.textView becomeFirstResponder];
+    });
 }
 
 - (void)openImagePickerController:(UIImagePickerControllerSourceType)type

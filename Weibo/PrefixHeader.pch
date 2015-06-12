@@ -37,3 +37,8 @@
 
 // 通知中心
 #define CYNotificationCenter [NSNotificationCenter defaultCenter]
+
+//通知
+#define WeiboEmotionDidSelectNotification @"WeiboEmotionDidSelectNotification"
+#define SelectEmotionKey @"SelectEmotion"
+

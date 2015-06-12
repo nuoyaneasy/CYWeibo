@@ -10,4 +10,6 @@
 
 @interface WeiboEmotionListView : UIView
 
+@property (nonatomic, strong) NSArray *emotions;
+
 @end
